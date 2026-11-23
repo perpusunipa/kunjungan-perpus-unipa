@@ -1,0 +1,1599 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daftar Kunjungan Perpustakaan UNIPA</title>
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --primary-hover: #1d4ed8;
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #cbd5e1;
+      --danger: #dc2626;
+      --success: #16a34a;
+      --warning: #d97706;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      background-color: var(--bg);
+      color: var(--text);
+    }
+
+    .container {
+      max-width: 740px;
+      margin: 0 auto;
+    }
+
+    .container-admin {
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .header {
+      background: var(--primary);
+      color: #fff;
+      padding: 24px 28px;
+      border-top: 8px solid #f59e0b;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .header-text {
+      flex: 1;
+      min-width: 240px;
+    }
+
+    .header h1 {
+      margin: 0 0 8px 0;
+      font-size: 1.45rem;
+      letter-spacing: 0.5px;
+    }
+
+    .header p {
+      margin: 0;
+      font-size: 0.93rem;
+      opacity: 0.9;
+      line-height: 1.4;
+    }
+
+    .btn-header-login {
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+
+    .btn-header-login:hover {
+      background: rgba(255, 255, 255, 0.28);
+    }
+
+    form {
+      padding: 24px 28px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+    }
+
+    .required {
+      color: var(--danger);
+      margin-left: 3px;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="date"],
+    input[type="month"],
+    select {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      background-color: #fff;
+    }
+
+    select:disabled,
+    input:disabled {
+      background-color: #f8fafc;
+      color: var(--muted);
+      cursor: not-allowed;
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.15);
+    }
+
+    /* State Error Validasi Input */
+    input.input-invalid {
+      border-color: var(--danger);
+      background-color: #fef2f2;
+    }
+
+    input.input-invalid:focus {
+      box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15);
+    }
+
+    .field-error {
+      color: var(--danger);
+      font-size: 0.82rem;
+      font-weight: 500;
+      margin-top: 6px;
+      display: none;
+    }
+
+    .field-hint {
+      color: var(--muted);
+      font-size: 0.8rem;
+      margin-top: 5px;
+    }
+
+    .radio-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .radio-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .radio-item:hover {
+      background: #f8fafc;
+    }
+
+    .radio-item input[type="radio"] {
+      accent-color: var(--primary);
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
+    .radio-item span {
+      font-size: 0.92rem;
+    }
+
+    #tujuanLainnyaInput {
+      margin-top: 10px;
+      display: none;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    button {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-submit {
+      background: var(--primary);
+      color: #fff;
+      flex: 1;
+    }
+
+    .btn-submit:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn-submit:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+    }
+
+    .btn-reset {
+      background: #e2e8f0;
+      color: var(--text);
+    }
+
+    .btn-reset:hover {
+      background: #cbd5e1;
+    }
+
+    .alert {
+      display: none;
+      padding: 14px 18px;
+      background: #dcfce7;
+      color: #166534;
+      border: 1px solid #86efac;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+
+    /* HALAMAN LOGIN ADMIN */
+    #loginPage {
+      display: none;
+      min-height: 85vh;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-box {
+      width: 100%;
+      max-width: 420px;
+      background: var(--card);
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .login-header {
+      background: var(--primary);
+      color: #fff;
+      padding: 24px;
+      text-align: center;
+      border-top: 8px solid #f59e0b;
+    }
+
+    .login-header h2 {
+      margin: 0 0 6px 0;
+      font-size: 1.3rem;
+    }
+
+    .login-header p {
+      margin: 0;
+      font-size: 0.88rem;
+      opacity: 0.9;
+    }
+
+    .login-body {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .password-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+
+    .password-wrapper input {
+      padding-right: 42px;
+      width: 100%;
+    }
+
+    .btn-eye {
+      position: absolute;
+      right: 10px;
+      background: transparent;
+      border: none;
+      padding: 4px 6px;
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 1rem;
+      border-radius: 4px;
+    }
+
+    .btn-eye:hover {
+      background: #f1f5f9;
+      color: var(--text);
+    }
+
+    .login-error {
+      color: var(--danger);
+      font-size: 0.85rem;
+      text-align: center;
+      display: none;
+      font-weight: 500;
+    }
+
+    /* HALAMAN DASHBOARD ADMIN */
+    #adminPage {
+      display: none;
+    }
+
+    .rekap-header {
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .rekap-header h2 {
+      margin: 0;
+      font-size: 1.1rem;
+    }
+
+    .rekap-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn-refresh {
+      background: var(--primary);
+      color: #fff;
+      padding: 8px 14px;
+      font-size: 0.85rem;
+    }
+
+    .btn-export {
+      background: var(--success);
+      color: #fff;
+      padding: 8px 14px;
+      font-size: 0.85rem;
+    }
+
+    .btn-pass {
+      background: var(--warning);
+      color: #fff;
+      padding: 8px 14px;
+      font-size: 0.85rem;
+    }
+
+    .btn-logout {
+      background: var(--danger);
+      color: #fff;
+      padding: 8px 14px;
+      font-size: 0.85rem;
+    }
+
+    /* Panel Ubah Password */
+    .change-pass-panel {
+      display: none;
+      padding: 18px 24px;
+      background: #fffbeb;
+      border-bottom: 1px solid #fde68a;
+    }
+
+    .change-pass-panel h4 {
+      margin: 0 0 12px 0;
+      color: #92400e;
+      font-size: 0.95rem;
+    }
+
+    .change-pass-grid {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .change-pass-grid .password-wrapper {
+      flex: 1;
+      min-width: 180px;
+    }
+
+    .change-pass-grid input {
+      padding: 9px 38px 9px 12px;
+      font-size: 0.88rem;
+    }
+
+    .pass-msg {
+      margin-top: 8px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      display: none;
+    }
+
+    /* Panel Filter Laporan */
+    .report-filter-box {
+      padding: 16px 24px;
+      background: #f8fafc;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .filter-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .filter-row input[type="text"] {
+      flex: 2;
+      min-width: 210px;
+      padding: 9px 12px;
+      font-size: 0.88rem;
+    }
+
+    .filter-row select,
+    .filter-row input[type="date"],
+    .filter-row input[type="month"] {
+      flex: 1;
+      min-width: 150px;
+      padding: 8px 12px;
+      font-size: 0.88rem;
+    }
+
+    .btn-reset-filter {
+      background: #e2e8f0;
+      color: var(--text);
+      padding: 9px 14px;
+      font-size: 0.85rem;
+      white-space: nowrap;
+    }
+
+    .report-summary-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 0.84rem;
+      color: var(--muted);
+    }
+
+    .active-filter-badge {
+      background: #dbeafe;
+      color: var(--primary);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+      padding: 0 24px 16px 24px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      font-size: 0.85rem;
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 10px;
+      text-align: left;
+    }
+
+    th {
+      background: #f8fafc;
+      font-weight: 600;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 24px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    /* Pagination */
+    .pagination-bar {
+      padding: 14px 24px;
+      border-top: 1px solid var(--border);
+      background: #f8fafc;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 0.85rem;
+    }
+
+    .pagination-info {
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .pagination-info select {
+      width: auto;
+      padding: 5px 8px;
+      font-size: 0.85rem;
+      border-radius: 6px;
+    }
+
+    .pagination-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-page {
+      background: #fff;
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 6px 12px;
+      font-size: 0.85rem;
+      border-radius: 6px;
+    }
+
+    .btn-page:hover:not(:disabled) {
+      background: #e2e8f0;
+    }
+
+    .btn-page:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =========================================================
+       VIEW 1: HALAMAN PENGUNJUNG (FORM DAFTAR KUNJUNGAN)
+       ========================================================= -->
+  <div class="container" id="visitorPage">
+    <div class="card">
+      <div class="header">
+        <div class="header-text">
+          <h1>DAFTAR KUNJUNGAN PERPUSTAKAAN UNIPA</h1>
+          <p>Silakan lengkapi data kehadiran di bawah ini dengan benar sebelum menggunakan layanan Perpustakaan Universitas Nusa Nipa.</p>
+        </div>
+        <button type="button" class="btn-header-login" onclick="bukaHalamanLogin()">🔒 Login Admin</button>
+      </div>
+
+      <form id="kunjunganForm" novalidate>
+        <div id="alertSuccess" class="alert">
+          Data kunjungan berhasil disimpan! Terima kasih telah berkunjung.
+        </div>
+
+        <!-- Nama Lengkap -->
+        <div class="form-group">
+          <label for="namaLengkap">NAMA LENGKAP <span class="required">*</span></label>
+          <input type="text" id="namaLengkap" placeholder="Contoh: Hilarius Alfan (huruf, spasi, titik, koma, atau petik)" required />
+          <div class="field-error" id="errorNama"></div>
+        </div>
+
+        <!-- Kategori Pengunjung -->
+        <div class="form-group">
+          <label for="kategoriPengunjung">KATEGORI PENGUNJUNG <span class="required">*</span></label>
+          <select id="kategoriPengunjung" required>
+            <option value="" disabled selected>-- Pilih Kategori --</option>
+            <option value="Mahasiswa">Mahasiswa</option>
+            <option value="Dosen">Dosen</option>
+            <option value="Tenaga Kependidikan / Staf">Tenaga Kependidikan / Staf</option>
+            <option value="Umum / Tamu">Umum / Tamu</option>
+          </select>
+        </div>
+
+        <!-- NIM/NIDN -->
+        <div class="form-group">
+          <label for="nimNidn">NIM / NIDN <span class="required">*</span></label>
+          <input type="text" id="nimNidn" placeholder="Pilih kategori pengunjung terlebih dahulu..." maxlength="15" required />
+          <div class="field-hint" id="hintNim">Mahasiswa: 8–12 digit angka | Dosen: 10 digit NIDN | Staf/Umum: isi '-' jika tidak ada.</div>
+          <div class="field-error" id="errorNim"></div>
+        </div>
+
+        <!-- Fakultas -->
+        <div class="form-group">
+          <label for="fakultas">FAKULTAS <span class="required">*</span></label>
+          <select id="fakultas" required>
+            <option value="" disabled selected>-- Pilih Fakultas --</option>
+            <option value="ILMU-ILMU KESEHATAN">ILMU-ILMU KESEHATAN</option>
+            <option value="TEKNIK">TEKNIK</option>
+            <option value="TEKNOLOGI PANGAN, PERTANIAN, & PERIKANAN">TEKNOLOGI PANGAN, PERTANIAN, & PERIKANAN</option>
+            <option value="ILMU-ILMU SOSIAL">ILMU-ILMU SOSIAL</option>
+            <option value="EKONOMI & BISNIS">EKONOMI & BISNIS</option>
+            <option value="FKIP">FKIP</option>
+            <option value="HUKUM">HUKUM</option>
+          </select>
+        </div>
+
+        <!-- Program Studi -->
+        <div class="form-group">
+          <label for="prodi">PROGRAM STUDI <span class="required">*</span></label>
+          <select id="prodi" required disabled>
+            <option value="" disabled selected>-- Pilih Fakultas Terlebih Dahulu --</option>
+          </select>
+        </div>
+
+        <!-- Tujuan Kunjungan -->
+        <div class="form-group">
+          <label>TUJUAN KUNJUNGAN <span class="required">*</span></label>
+          <div class="radio-group">
+            <label class="radio-item">
+              <input type="radio" name="tujuan" value="KERJA TUGAS" required />
+              <span>KERJA TUGAS</span>
+            </label>
+            <label class="radio-item">
+              <input type="radio" name="tujuan" value="MEMBACA BUKU" />
+              <span>MEMBACA BUKU</span>
+            </label>
+            <label class="radio-item">
+              <input type="radio" name="tujuan" value="PEMINJAMAN BUKU" />
+              <span>PEMINJAMAN BUKU</span>
+            </label>
+            <label class="radio-item">
+              <input type="radio" name="tujuan" value="PENGEMBALIAN BUKU" />
+              <span>PENGEMBALIAN BUKU</span>
+            </label>
+            <label class="radio-item">
+              <input type="radio" name="tujuan" value="PENYERAHAN SKRIPSI/ LAPORAN/ KTI" />
+              <span>PENYERAHAN SKRIPSI/ LAPORAN/ KTI</span>
+            </label>
+            <label class="radio-item">
+              <input type="radio" name="tujuan" value="PENDAFTARAN ANGGOTA PERPUS" />
+              <span>PENDAFTARAN ANGGOTA PERPUS</span>
+            </label>
+            <label class="radio-item">
+              <input type="radio" name="tujuan" value="SURAT BEBAS PINJAMAN PUSTAKA" />
+              <span>SURAT BEBAS PINJAMAN PUSTAKA</span>
+            </label>
+            <label class="radio-item">
+              <input type="radio" name="tujuan" value="LAINNYA" id="radioLainnya" />
+              <span>LAINNYA</span>
+            </label>
+          </div>
+          <input type="text" id="tujuanLainnyaInput" placeholder="Sebutkan tujuan kunjungan Anda..." />
+        </div>
+
+        <div class="btn-group">
+          <button type="submit" class="btn-submit">Kirim Daftar Kunjungan</button>
+          <button type="reset" class="btn-reset" id="btnReset">Reset</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       VIEW 2: HALAMAN LOGIN PETUGAS
+       ========================================================= -->
+  <div id="loginPage">
+    <div class="login-box">
+      <div class="login-header">
+        <h2>LOGIN ADMIN PERPUSTAKAAN</h2>
+        <p>Masuk untuk mengakses rekap kunjungan & unduh laporan</p>
+      </div>
+      <div class="login-body">
+        <div>
+          <label for="staffUsername">Username</label>
+          <input type="text" id="staffUsername" placeholder="Masukkan username..." onkeypress="if(event.key === 'Enter') document.getElementById('staffPassword').focus()" />
+        </div>
+        <div>
+          <label for="staffPassword">Password</label>
+          <div class="password-wrapper">
+            <input type="password" id="staffPassword" placeholder="Masukkan password..." onkeypress="if(event.key === 'Enter') cekLoginPetugas()" />
+            <button type="button" class="btn-eye" onclick="toggleLihatPassword('staffPassword', this)" title="Lihat/Sembunyikan Password">👁️</button>
+          </div>
+        </div>
+        <div class="btn-group" style="margin-top: 8px;">
+          <button type="button" class="btn-submit" onclick="cekLoginPetugas()">Masuk</button>
+          <button type="button" class="btn-reset" onclick="kembaliKePengunjung()">← Kembali</button>
+        </div>
+        <div id="loginError" class="login-error">Username atau password salah!</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       VIEW 3: HALAMAN ADMIN (DASHBOARD REKAP KUNJUNGAN)
+       ========================================================= -->
+  <div class="container-admin" id="adminPage">
+    <div class="card">
+      <div class="header">
+        <div class="header-text">
+          <h1>PANEL ADMIN - REKAP KUNJUNGAN UNIPA</h1>
+          <p>Data terhubung langsung dengan Google Sheets Perpustakaan Universitas Nusa Nipa</p>
+        </div>
+        <button type="button" class="btn-header-login" onclick="logoutPetugas()">← Keluar ke Form Pengunjung</button>
+      </div>
+
+      <div class="rekap-header">
+        <h2>Total Data Ditampilkan: <span id="totalPengunjung">0</span></h2>
+        <div class="rekap-actions">
+          <button type="button" class="btn-refresh" onclick="muatDataDariServer()">Segarkan Data</button>
+          <button type="button" class="btn-export" onclick="exportLaporanExcel()">Download Laporan (Excel)</button>
+          <button type="button" class="btn-pass" onclick="toggleUbahPassword()">Ubah Password</button>
+          <button type="button" class="btn-logout" onclick="logoutPetugas()">Keluar</button>
+        </div>
+      </div>
+
+      <!-- Panel Ubah Password -->
+      <div class="change-pass-panel" id="changePassPanel">
+        <h4>Ubah Password Akun Petugas (<span id="activeUserLabel"></span>)</h4>
+        <div class="change-pass-grid">
+          <div class="password-wrapper">
+            <input type="password" id="oldPassword" placeholder="Password lama" />
+            <button type="button" class="btn-eye" onclick="toggleLihatPassword('oldPassword', this)" title="Lihat/Sembunyikan Password">👁️</button>
+          </div>
+          <div class="password-wrapper">
+            <input type="password" id="newPassword" placeholder="Password baru (min. 6 karakter)" />
+            <button type="button" class="btn-eye" onclick="toggleLihatPassword('newPassword', this)" title="Lihat/Sembunyikan Password">👁️</button>
+          </div>
+          <div class="password-wrapper">
+            <input type="password" id="confirmPassword" placeholder="Konfirmasi password baru" />
+            <button type="button" class="btn-eye" onclick="toggleLihatPassword('confirmPassword', this)" title="Lihat/Sembunyikan Password">👁️</button>
+          </div>
+          <button type="button" class="btn-submit" style="flex: 0 0 auto; padding: 9px 16px;" onclick="simpanPasswordBaru()">Simpan</button>
+          <button type="button" class="btn-reset" style="padding: 9px 14px;" onclick="toggleUbahPassword()">Tutup</button>
+        </div>
+        <div id="passMessage" class="pass-msg"></div>
+      </div>
+
+      <!-- Panel Filter Laporan -->
+      <div class="report-filter-box">
+        <div class="filter-row">
+          <input type="text" id="searchInput" placeholder="🔍 Cari Nama, NIM/NIDN, atau Tujuan..." oninput="terapkanFilter()" />
+          <select id="prodiFilter" onchange="terapkanFilter()">
+            <option value="">Semua Program Studi</option>
+          </select>
+        </div>
+        <div class="filter-row">
+          <select id="periodeMode" onchange="ubahModePeriode()">
+            <option value="semua">Periode: Semua Waktu</option>
+            <option value="tanggal">Laporan Per Tanggal</option>
+            <option value="bulan">Laporan Per Bulan</option>
+            <option value="tahun">Laporan Per Tahun</option>
+          </select>
+          <input type="date" id="dateFilter" style="display: none;" onchange="terapkanFilter()" />
+          <input type="month" id="monthFilter" style="display: none;" onchange="terapkanFilter()" />
+          <select id="yearFilter" style="display: none;" onchange="terapkanFilter()">
+            <option value="">-- Pilih Tahun --</option>
+          </select>
+          <button type="button" class="btn-reset-filter" onclick="resetFilter()">Reset Filter</button>
+        </div>
+        <div class="report-summary-bar">
+          <span>Filter aktif: <span class="active-filter-badge" id="activeFilterLabel">Semua Data</span></span>
+          <span>Klik <strong>Download Laporan (Excel)</strong> untuk mengunduh tabel rapi sesuai filter.</span>
+        </div>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Waktu</th>
+              <th>Nama Lengkap</th>
+              <th>Kategori</th>
+              <th>NIM/NIDN</th>
+              <th>Fakultas</th>
+              <th>Program Studi</th>
+              <th>Tujuan</th>
+            </tr>
+          </thead>
+          <tbody id="tabelBody"></tbody>
+        </table>
+        <div id="emptyState" class="empty-state">Belum ada data kunjungan yang tercatat.</div>
+      </div>
+
+      <!-- Kontrol Pagination -->
+      <div class="pagination-bar" id="paginationBar" style="display: none;">
+        <div class="pagination-info">
+          <span>Tampilkan</span>
+          <select id="rowsPerPageSelect" onchange="ubahJumlahBaris()">
+            <option value="50" selected>50</option>
+            <option value="100">100</option>
+            <option value="250">250</option>
+          </select>
+          <span>baris | <strong id="rangeInfo">1-50 dari 0</strong></span>
+        </div>
+        <div class="pagination-controls">
+          <button type="button" class="btn-page" id="btnPrevPage" onclick="gantiHalaman(-1)">« Sebelumnya</button>
+          <span id="pageIndicator" style="font-weight: 600;">Hal 1 / 1</span>
+          <button type="button" class="btn-page" id="btnNextPage" onclick="gantiHalaman(1)">Berikutnya »</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // ==========================================
+  // PENGATURAN KONFIGURASI AKUN & SERVER
+  // ==========================================
+  const USERNAME_PETUGAS = "adminperpus";
+  const DEFAULT_PASSWORD = "perpusunipa2026";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbytj-EDE72c5zygyzoiPAgtHwR8HM_CmPUrhfc1qNhH6qRmcW78Ci30NJHui87hIVw/exec";
+  // ==========================================
+
+  const DATA_PRODI = {
+    "ILMU-ILMU KESEHATAN": ["S1 KEPERAWATAN", "PROFESI NERS"],
+    "TEKNIK": ["TEKNIK INFORMATIKA", "TEKNIK SIPIL", "ARSITEKTUR", "DESAIN KOMUNIKASI VISUAL"],
+    "TEKNOLOGI PANGAN, PERTANIAN, & PERIKANAN": ["AGROTEKNOLOGI", "AGROBISNIS", "MANAJEMEN SUMBERDAYA PERAIRAN", "PETERNAKAN", "TEKNOLOGI PANGAN HASIL PERTANIAN"],
+    "ILMU-ILMU SOSIAL": ["PSIKOLOGI", "ILMU KOMUNIKASI"],
+    "EKONOMI & BISNIS": ["MANAJEMEN", "AKUNTANSI", "KEWIRAUSAHAAN"],
+    "FKIP": ["PGSD", "KIMIA", "FISIKA", "BIOLOGI", "BAHASA INGGRIS"],
+    "HUKUM": ["HUKUM"]
+  };
+
+  function getPasswordAktif() {
+    return localStorage.getItem('unipa_staff_password') || DEFAULT_PASSWORD;
+  }
+
+  function toggleLihatPassword(inputId, btnEl) {
+    const input = document.getElementById(inputId);
+    if (input.type === "password") {
+      input.type = "text";
+      btnEl.textContent = "🙈";
+    } else {
+      input.type = "password";
+      btnEl.textContent = "👁️";
+    }
+  }
+
+  function resetSemuaTipePassword() {
+    ['staffPassword', 'oldPassword', 'newPassword', 'confirmPassword'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.type = 'password';
+        el.value = '';
+        if (el.nextElementSibling) el.nextElementSibling.textContent = '👁️';
+      }
+    });
+  }
+
+  const visitorPage = document.getElementById('visitorPage');
+  const loginPage = document.getElementById('loginPage');
+  const adminPage = document.getElementById('adminPage');
+
+  function bukaHalamanLogin() {
+    visitorPage.style.display = 'none';
+    adminPage.style.display = 'none';
+    loginPage.style.display = 'flex';
+    document.getElementById('loginError').style.display = 'none';
+    document.getElementById('staffUsername').value = '';
+    resetSemuaTipePassword();
+    document.getElementById('staffUsername').focus();
+    window.scrollTo(0, 0);
+  }
+
+  function kembaliKePengunjung() {
+    loginPage.style.display = 'none';
+    adminPage.style.display = 'none';
+    visitorPage.style.display = 'block';
+    resetSemuaTipePassword();
+    window.scrollTo(0, 0);
+  }
+
+  function cekLoginPetugas() {
+    const inputUser = document.getElementById('staffUsername').value.trim().toLowerCase();
+    const inputPass = document.getElementById('staffPassword').value;
+
+    if (inputUser === USERNAME_PETUGAS.toLowerCase() && inputPass === getPasswordAktif()) {
+      loginPage.style.display = 'none';
+      visitorPage.style.display = 'none';
+      adminPage.style.display = 'block';
+      document.getElementById('loginError').style.display = 'none';
+      document.getElementById('activeUserLabel').textContent = USERNAME_PETUGAS;
+      document.getElementById('staffUsername').value = '';
+      resetSemuaTipePassword();
+      muatDataDariServer();
+      window.scrollTo(0, 0);
+    } else {
+      document.getElementById('loginError').style.display = 'block';
+    }
+  }
+
+  function logoutPetugas() {
+    document.getElementById('changePassPanel').style.display = 'none';
+    kembaliKePengunjung();
+  }
+
+  // ==========================================
+  // VALIDASI & LOGIKA FORM PENGUNJUNG
+  // ==========================================
+  const form = document.getElementById('kunjunganForm');
+  const namaLengkapInput = document.getElementById('namaLengkap');
+  const kategoriSelect = document.getElementById('kategoriPengunjung');
+  const nimNidnInput = document.getElementById('nimNidn');
+  const fakultasSelect = document.getElementById('fakultas');
+  const prodiSelect = document.getElementById('prodi');
+  const radioLainnya = document.getElementById('radioLainnya');
+  const tujuanLainnyaInput = document.getElementById('tujuanLainnyaInput');
+  const alertSuccess = document.getElementById('alertSuccess');
+  const btnSubmit = form.querySelector('.btn-submit');
+
+  const errorNama = document.getElementById('errorNama');
+  const errorNim = document.getElementById('errorNim');
+  const hintNim = document.getElementById('hintNim');
+
+  function tampilkanErrorField(inputEl, errorEl, pesan) {
+    inputEl.classList.add('input-invalid');
+    errorEl.textContent = pesan;
+    errorEl.style.display = 'block';
+  }
+
+  function bersihkanErrorField(inputEl, errorEl) {
+    inputEl.classList.remove('input-invalid');
+    errorEl.textContent = '';
+    errorEl.style.display = 'none';
+  }
+
+  // Validasi Nama Lengkap
+  function validasiNamaLengkap() {
+    const nilai = namaLengkapInput.value.trim();
+    if (!nilai) {
+      tampilkanErrorField(namaLengkapInput, errorNama, 'Nama lengkap wajib diisi.');
+      return false;
+    }
+    if (nilai.length < 3) {
+      tampilkanErrorField(namaLengkapInput, errorNama, 'Nama lengkap minimal terdiri dari 3 karakter.');
+      return false;
+    }
+    // Hanya mengizinkan huruf (termasuk aksen), spasi, titik (.), koma (,), apostrof ('), dan tanda hubung (-)
+    const polaNama = /^[a-zA-ZÀ-ÿ\s.,'-]+$/;
+    if (!polaNama.test(nilai)) {
+      tampilkanErrorField(namaLengkapInput, errorNama, 'Nama lengkap tidak boleh mengandung angka atau simbol khusus (hanya huruf, spasi, titik, koma, atau tanda petik).');
+      return false;
+    }
+    // Cegah karakter berulang tidak wajar (misal: "aaaa" atau "....")
+    if (/(.)\1{3,}/.test(nilai)) {
+      tampilkanErrorField(namaLengkapInput, errorNama, 'Format nama tidak valid. Masukkan nama asli Anda.');
+      return false;
+    }
+    bersihkanErrorField(namaLengkapInput, errorNama);
+    return true;
+  }
+
+  // Validasi NIM / NIDN sesuai Kategori Pengunjung
+  function validasiNimNidn() {
+    const kategori = kategoriSelect.value;
+    const nilai = nimNidnInput.value.trim();
+
+    if (!nilai) {
+      tampilkanErrorField(nimNidnInput, errorNim, 'NIM / NIDN wajib diisi (isi "-" jika Staf/Umum tanpa nomor induk).');
+      return false;
+    }
+
+    if (kategori === 'Mahasiswa') {
+      // NIM mahasiswa umumnya 8 hingga 12 digit angka
+      if (!/^\d{8,12}$/.test(nilai)) {
+        tampilkanErrorField(nimNidnInput, errorNim, 'NIM Mahasiswa harus berupa 8–12 digit angka tanpa spasi atau huruf (contoh: 082220001).');
+        return false;
+      }
+      // Cegah input angka kembar semua seperti 00000000 atau 11111111
+      if (/^(\d)\1+$/.test(nilai)) {
+        tampilkanErrorField(nimNidnInput, errorNim, 'Nomor NIM tidak valid. Masukkan NIM Anda yang benar.');
+        return false;
+      }
+    } else if (kategori === 'Dosen') {
+      // NIDN / NUPTK dosen 10 digit angka (atau 16 digit NUPTK)
+      if (!/^(\d{10}|\d{16})$/.test(nilai)) {
+        tampilkanErrorField(nimNidnInput, errorNim, 'NIDN Dosen harus berupa 10 digit angka (atau 16 digit NUPTK) tanpa spasi.');
+        return false;
+      }
+      if (/^(\d)\1+$/.test(nilai)) {
+        tampilkanErrorField(nimNidnInput, errorNim, 'Nomor NIDN tidak valid. Masukkan NIDN Anda yang benar.');
+        return false;
+      }
+    } else if (kategori === 'Tenaga Kependidikan / Staf' || kategori === 'Umum / Tamu') {
+      // Boleh "-" atau angka identitas (NIP/NIK/ID 5-18 digit)
+      if (nilai !== '-' && !/^\d{5,18}$/.test(nilai)) {
+        tampilkanErrorField(nimNidnInput, errorNim, 'Untuk Staf/Umum, isi tanda "-" atau nomor identitas berupa angka (5–18 digit).');
+        return false;
+      }
+    } else {
+      // Jika kategori belum dipilih
+      if (nilai !== '-' && !/^\d{8,16}$/.test(nilai)) {
+        tampilkanErrorField(nimNidnInput, errorNim, 'Pilih Kategori Pengunjung terlebih dahulu, lalu masukkan NIM/NIDN berupa angka (8–16 digit).');
+        return false;
+      }
+    }
+
+    bersihkanErrorField(nimNidnInput, errorNim);
+    return true;
+  }
+
+  // Sesuaikan placeholder & bantuan otomatis saat Kategori berubah
+  kategoriSelect.addEventListener('change', function() {
+    const kat = this.value;
+    if (kat === 'Mahasiswa') {
+      nimNidnInput.placeholder = 'Masukkan NIM Mahasiswa (8–12 digit angka)';
+      hintNim.textContent = 'Wajib diisi 8–12 digit angka sesuai Kartu Tanda Mahasiswa (KTM).';
+      if (nimNidnInput.value === '-') nimNidnInput.value = '';
+    } else if (kat === 'Dosen') {
+      nimNidnInput.placeholder = 'Masukkan NIDN Dosen (10 digit angka)';
+      hintNim.textContent = 'Wajib diisi 10 digit angka NIDN (atau 16 digit NUPTK).';
+      if (nimNidnInput.value === '-') nimNidnInput.value = '';
+    } else {
+      nimNidnInput.placeholder = 'Masukkan NIP/NIK atau isi "-" jika tidak ada';
+      hintNim.textContent = 'Isi tanda "-" jika tidak memiliki nomor induk.';
+      if (!nimNidnInput.value.trim()) nimNidnInput.value = '-';
+    }
+    if (nimNidnInput.value.trim()) validasiNimNidn();
+  });
+
+  // Validasi real-time saat mengetik / keluar dari kolom
+  namaLengkapInput.addEventListener('blur', validasiNamaLengkap);
+  namaLengkapInput.addEventListener('input', () => {
+    if (namaLengkapInput.classList.contains('input-invalid')) validasiNamaLengkap();
+  });
+
+  nimNidnInput.addEventListener('blur', validasiNimNidn);
+  nimNidnInput.addEventListener('input', () => {
+    // Otomatis hapus spasi yang tidak sengaja terketik di NIM/NIDN
+    nimNidnInput.value = nimNidnInput.value.replace(/\s+/g, '');
+    if (nimNidnInput.classList.contains('input-invalid')) validasiNimNidn();
+  });
+
+  fakultasSelect.addEventListener('change', function() {
+    const daftarProdi = DATA_PRODI[this.value] || [];
+    prodiSelect.innerHTML = '<option value="" disabled selected>-- Pilih Program Studi --</option>';
+
+    daftarProdi.forEach(prodi => {
+      const option = document.createElement('option');
+      option.value = prodi;
+      option.textContent = prodi;
+      prodiSelect.appendChild(option);
+    });
+
+    prodiSelect.disabled = false;
+    if (daftarProdi.length === 1) prodiSelect.value = daftarProdi[0];
+  });
+
+  function resetProdiDropdown() {
+    prodiSelect.innerHTML = '<option value="" disabled selected>-- Pilih Fakultas Terlebih Dahulu --</option>';
+    prodiSelect.disabled = true;
+  }
+
+  document.querySelectorAll('input[name="tujuan"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      if (radioLainnya.checked) {
+        tujuanLainnyaInput.style.display = 'block';
+        tujuanLainnyaInput.required = true;
+      } else {
+        tujuanLainnyaInput.style.display = 'none';
+        tujuanLainnyaInput.required = false;
+        tujuanLainnyaInput.value = '';
+      }
+    });
+  });
+
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const namaValid = validasiNamaLengkap();
+    const nimValid = validasiNimNidn();
+
+    if (!namaValid) {
+      namaLengkapInput.focus();
+      return;
+    }
+
+    if (!kategoriSelect.value) {
+      alert('Silakan pilih Kategori Pengunjung terlebih dahulu.');
+      kategoriSelect.focus();
+      return;
+    }
+
+    if (!nimValid) {
+      nimNidnInput.focus();
+      return;
+    }
+
+    if (!fakultasSelect.value) {
+      alert('Silakan pilih Fakultas terlebih dahulu.');
+      fakultasSelect.focus();
+      return;
+    }
+
+    if (!prodiSelect.value) {
+      alert('Silakan pilih Program Studi terlebih dahulu.');
+      prodiSelect.focus();
+      return;
+    }
+
+    const tujuanRadio = document.querySelector('input[name="tujuan"]:checked');
+    if (!tujuanRadio) {
+      alert('Silakan pilih Tujuan Kunjungan Anda.');
+      return;
+    }
+
+    if (tujuanRadio.value === 'LAINNYA' && !tujuanLainnyaInput.value.trim()) {
+      alert('Silakan sebutkan tujuan kunjungan Anda pada kolom yang tersedia.');
+      tujuanLainnyaInput.focus();
+      return;
+    }
+
+    const teksAsliTombol = btnSubmit.textContent;
+    btnSubmit.textContent = "Mengirim data...";
+    btnSubmit.disabled = true;
+
+    const tujuanAkhir = tujuanRadio.value === 'LAINNYA' 
+      ? `LAINNYA: ${tujuanLainnyaInput.value.trim()}` 
+      : tujuanRadio.value;
+
+    const sekarang = new Date();
+    const waktuFormat = sekarang.toLocaleDateString('id-ID') + ' ' + sekarang.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+
+    // Rapikan spasi ganda pada nama sebelum dikirim
+    const namaBersih = namaLengkapInput.value.trim().replace(/\s+/g, ' ').toUpperCase();
+
+    const entriBaru = {
+      waktu: waktuFormat,
+      nama: namaBersih,
+      kategori: kategoriSelect.value,
+      nim: nimNidnInput.value.trim(),
+      fakultas: fakultasSelect.value,
+      prodi: prodiSelect.value,
+      tujuan: tujuanAkhir
+    };
+
+    try {
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(entriBaru)
+      });
+
+      form.reset();
+      resetProdiDropdown();
+      bersihkanErrorField(namaLengkapInput, errorNama);
+      bersihkanErrorField(nimNidnInput, errorNim);
+      nimNidnInput.placeholder = 'Pilih kategori pengunjung terlebih dahulu...';
+      hintNim.textContent = "Mahasiswa: 8–12 digit angka | Dosen: 10 digit NIDN | Staf/Umum: isi '-' jika tidak ada.";
+      tujuanLainnyaInput.style.display = 'none';
+
+      alertSuccess.style.display = 'block';
+      setTimeout(() => {
+        alertSuccess.style.display = 'none';
+      }, 3500);
+
+    } catch (error) {
+      alert("Gagal mengirim data. Pastikan koneksi internet aktif.");
+      console.error(error);
+    } finally {
+      btnSubmit.textContent = teksAsliTombol;
+      btnSubmit.disabled = false;
+    }
+  });
+
+  document.getElementById('btnReset').addEventListener('click', () => {
+    resetProdiDropdown();
+    bersihkanErrorField(namaLengkapInput, errorNama);
+    bersihkanErrorField(nimNidnInput, errorNim);
+    nimNidnInput.placeholder = 'Pilih kategori pengunjung terlebih dahulu...';
+    hintNim.textContent = "Mahasiswa: 8–12 digit angka | Dosen: 10 digit NIDN | Staf/Umum: isi '-' jika tidak ada.";
+    tujuanLainnyaInput.style.display = 'none';
+  });
+
+  // ==========================================
+  // LOGIKA HALAMAN ADMIN & REKAP
+  // ==========================================
+  const changePassPanel = document.getElementById('changePassPanel');
+  const passMessage = document.getElementById('passMessage');
+  const tabelBody = document.getElementById('tabelBody');
+  const emptyState = document.getElementById('emptyState');
+  const totalPengunjung = document.getElementById('totalPengunjung');
+
+  const searchInput = document.getElementById('searchInput');
+  const prodiFilter = document.getElementById('prodiFilter');
+  const periodeMode = document.getElementById('periodeMode');
+  const dateFilter = document.getElementById('dateFilter');
+  const monthFilter = document.getElementById('monthFilter');
+  const yearFilter = document.getElementById('yearFilter');
+  const activeFilterLabel = document.getElementById('activeFilterLabel');
+
+  const paginationBar = document.getElementById('paginationBar');
+  const rowsPerPageSelect = document.getElementById('rowsPerPageSelect');
+  const rangeInfo = document.getElementById('rangeInfo');
+  const pageIndicator = document.getElementById('pageIndicator');
+  const btnPrevPage = document.getElementById('btnPrevPage');
+  const btnNextPage = document.getElementById('btnNextPage');
+
+  let dataKunjungan = [];
+  let dataTersaring = [];
+  let halamanSaatIni = 1;
+  let barisPerHalaman = 50;
+
+  (function inisialisasiDropdownLaporan() {
+    Object.keys(DATA_PRODI).forEach(fakultas => {
+      const optGroup = document.createElement('optgroup');
+      optGroup.label = fakultas;
+      DATA_PRODI[fakultas].forEach(prodi => {
+        const opt = document.createElement('option');
+        opt.value = prodi;
+        opt.textContent = prodi;
+        optGroup.appendChild(opt);
+      });
+      prodiFilter.appendChild(optGroup);
+    });
+
+    const tahunSekarang = new Date().getFullYear();
+    for (let y = tahunSekarang + 1; y >= 2024; y--) {
+      const opt = document.createElement('option');
+      opt.value = String(y);
+      opt.textContent = `Tahun ${y}`;
+      yearFilter.appendChild(opt);
+    }
+  })();
+
+  function toggleUbahPassword() {
+    passMessage.style.display = 'none';
+    resetSemuaTipePassword();
+    changePassPanel.style.display = (changePassPanel.style.display === 'block') ? 'none' : 'block';
+  }
+
+  function tampilkanPesanPassword(teks, sukses) {
+    passMessage.textContent = teks;
+    passMessage.style.color = sukses ? 'var(--success)' : 'var(--danger)';
+    passMessage.style.display = 'block';
+  }
+
+  function simpanPasswordBaru() {
+    const lama = document.getElementById('oldPassword').value;
+    const baru = document.getElementById('newPassword').value;
+    const konfirmasi = document.getElementById('confirmPassword').value;
+
+    if (lama !== getPasswordAktif()) {
+      tampilkanPesanPassword('Password lama tidak sesuai!', false);
+      return;
+    }
+
+    if (baru.length < 6) {
+      tampilkanPesanPassword('Password baru minimal 6 karakter.', false);
+      return;
+    }
+
+    if (baru !== konfirmasi) {
+      tampilkanPesanPassword('Konfirmasi password baru tidak cocok!', false);
+      return;
+    }
+
+    localStorage.setItem('unipa_staff_password', baru);
+    tampilkanPesanPassword('Password berhasil diubah! Gunakan password baru ini saat login berikutnya.', true);
+
+    setTimeout(() => {
+      changePassPanel.style.display = 'none';
+      passMessage.style.display = 'none';
+      resetSemuaTipePassword();
+    }, 2500);
+  }
+
+  async function muatDataDariServer() {
+    emptyState.style.display = 'block';
+    emptyState.textContent = 'Memuat data terbaru dari Google Sheets...';
+    paginationBar.style.display = 'none';
+    tabelBody.innerHTML = '';
+
+    try {
+      const response = await fetch(SCRIPT_URL);
+      dataKunjungan = await response.json();
+      terapkanFilter();
+    } catch (error) {
+      emptyState.textContent = 'Gagal memuat data dari Google Sheets. Periksa koneksi internet Anda.';
+      console.error(error);
+    }
+  }
+
+  function ubahModePeriode() {
+    const mode = periodeMode.value;
+    dateFilter.style.display = mode === 'tanggal' ? 'block' : 'none';
+    monthFilter.style.display = mode === 'bulan' ? 'block' : 'none';
+    yearFilter.style.display = mode === 'tahun' ? 'block' : 'none';
+
+    if (mode !== 'tanggal') dateFilter.value = '';
+    if (mode !== 'bulan') monthFilter.value = '';
+    if (mode !== 'tahun') yearFilter.value = '';
+
+    terapkanFilter();
+  }
+
+  function parseBagianWaktu(waktuRaw) {
+    const str = String(waktuRaw || '').trim();
+    const matchID = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+    if (matchID) {
+      return {
+        hari: matchID[1].padStart(2, '0'),
+        bulan: matchID[2].padStart(2, '0'),
+        tahun: matchID[3]
+      };
+    }
+    const matchISO = str.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (matchISO) {
+      return {
+        tahun: matchISO[1],
+        bulan: matchISO[2],
+        hari: matchISO[3]
+      };
+    }
+    return null;
+  }
+
+  function cocokPeriode(waktuString) {
+    const mode = periodeMode.value;
+    if (mode === 'semua') return true;
+
+    const bagian = parseBagianWaktu(waktuString);
+    if (!bagian) return false;
+
+    if (mode === 'tanggal' && dateFilter.value) {
+      const [y, m, d] = dateFilter.value.split('-');
+      return bagian.tahun === y && bagian.bulan === m && bagian.hari === d;
+    }
+
+    if (mode === 'bulan' && monthFilter.value) {
+      const [y, m] = monthFilter.value.split('-');
+      return bagian.tahun === y && bagian.bulan === m;
+    }
+
+    if (mode === 'tahun' && yearFilter.value) {
+      return bagian.tahun === yearFilter.value;
+    }
+
+    return true;
+  }
+
+  function perbaruiLabelFilter() {
+    const bagianLabel = [];
+    const prodiVal = prodiFilter.value;
+    const mode = periodeMode.value;
+
+    if (prodiVal) bagianLabel.push(`Prodi: ${prodiVal}`);
+
+    if (mode === 'tanggal' && dateFilter.value) {
+      const [y, m, d] = dateFilter.value.split('-');
+      bagianLabel.push(`Tanggal: ${d}/${m}/${y}`);
+    } else if (mode === 'bulan' && monthFilter.value) {
+      const [y, m] = monthFilter.value.split('-');
+      const namaBulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+      bagianLabel.push(`Bulan: ${namaBulan[parseInt(m, 10) - 1]} ${y}`);
+    } else if (mode === 'tahun' && yearFilter.value) {
+      bagianLabel.push(`Tahun: ${yearFilter.value}`);
+    }
+
+    if (searchInput.value.trim()) {
+      bagianLabel.push(`Kata kunci: "${searchInput.value.trim()}"`);
+    }
+
+    activeFilterLabel.textContent = bagianLabel.length > 0 ? bagianLabel.join(' | ') : 'Semua Data';
+  }
+
+  function terapkanFilter() {
+    const kataKunci = searchInput.value.trim().toLowerCase();
+    const prodiDipilih = prodiFilter.value;
+
+    dataTersaring = dataKunjungan.filter(item => {
+      const cocokTeks = !kataKunci || 
+        String(item.nama || '').toLowerCase().includes(kataKunci) ||
+        String(item.nim || '').toLowerCase().includes(kataKunci) ||
+        String(item.tujuan || '').toLowerCase().includes(kataKunci);
+
+      const cocokProdi = !prodiDipilih || String(item.prodi || '').toUpperCase() === prodiDipilih;
+      const cocokWaktu = cocokPeriode(item.waktu);
+
+      return cocokTeks && cocokProdi && cocokWaktu;
+    });
+
+    perbaruiLabelFilter();
+    halamanSaatIni = 1;
+    renderTabel();
+  }
+
+  function resetFilter() {
+    searchInput.value = '';
+    prodiFilter.value = '';
+    periodeMode.value = 'semua';
+    ubahModePeriode();
+  }
+
+  function ubahJumlahBaris() {
+    barisPerHalaman = parseInt(rowsPerPageSelect.value, 10);
+    halamanSaatIni = 1;
+    renderTabel();
+  }
+
+  function gantiHalaman(arah) {
+    const totalHalaman = Math.ceil(dataTersaring.length / barisPerHalaman) || 1;
+    halamanSaatIni += arah;
+    if (halamanSaatIni < 1) halamanSaatIni = 1;
+    if (halamanSaatIni > totalHalaman) halamanSaatIni = totalHalaman;
+    renderTabel();
+  }
+
+  function renderTabel() {
+    tabelBody.innerHTML = '';
+    const totalData = dataTersaring.length;
+    totalPengunjung.textContent = totalData;
+
+    if (totalData === 0) {
+      paginationBar.style.display = 'none';
+      emptyState.style.display = 'block';
+      emptyState.textContent = dataKunjungan.length === 0 
+        ? 'Belum ada data kunjungan yang tercatat.' 
+        : 'Tidak ada data yang cocok dengan filter laporan yang dipilih.';
+      return;
+    }
+
+    emptyState.style.display = 'none';
+    paginationBar.style.display = 'flex';
+
+    const totalHalaman = Math.ceil(totalData / barisPerHalaman);
+    if (halamanSaatIni > totalHalaman) halamanSaatIni = totalHalaman;
+
+    const indeksMulai = (halamanSaatIni - 1) * barisPerHalaman;
+    const indeksAkhir = Math.min(indeksMulai + barisPerHalaman, totalData);
+    const potonganData = dataTersaring.slice(indeksMulai, indeksAkhir);
+
+    const fragment = document.createDocumentFragment();
+    potonganData.forEach((item, idx) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${indeksMulai + idx + 1}</td>
+        <td>${item.waktu}</td>
+        <td>${item.nama}</td>
+        <td>${item.kategori}</td>
+        <td>${item.nim}</td>
+        <td>${item.fakultas}</td>
+        <td>${item.prodi}</td>
+        <td>${item.tujuan}</td>
+      `;
+      fragment.appendChild(tr);
+    });
+    tabelBody.appendChild(fragment);
+
+    rangeInfo.textContent = `${indeksMulai + 1}-${indeksAkhir} dari ${totalData}`;
+    pageIndicator.textContent = `Hal ${halamanSaatIni} / ${totalHalaman}`;
+    btnPrevPage.disabled = halamanSaatIni === 1;
+    btnNextPage.disabled = halamanSaatIni === totalHalaman;
+  }
+
+  function escapeHTML(str) {
+    return String(str ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function exportLaporanExcel() {
+    if (dataTersaring.length === 0) {
+      alert('Belum ada data pada filter laporan saat ini untuk diunduh.');
+      return;
+    }
+
+    const filterInfo = activeFilterLabel.textContent;
+    const tanggalCetak = new Date().toLocaleDateString('id-ID', {
+      day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
+    });
+
+    let barisTabelHTML = '';
+    dataTersaring.forEach((item, index) => {
+      const warnaBaris = index % 2 === 1 ? '#f8fafc' : '#ffffff';
+      barisTabelHTML += `
+        <tr style="background-color: ${warnaBaris};">
+          <td style="border: 1px solid #94a3b8; padding: 6px 8px; text-align: center; vertical-align: middle;">${index + 1}</td>
+          <td style="border: 1px solid #94a3b8; padding: 6px 8px; text-align: center; vertical-align: middle; mso-number-format:'\\@';">${escapeHTML(item.waktu)}</td>
+          <td style="border: 1px solid #94a3b8; padding: 6px 8px; vertical-align: middle;">${escapeHTML(item.nama)}</td>
+          <td style="border: 1px solid #94a3b8; padding: 6px 8px; vertical-align: middle;">${escapeHTML(item.kategori)}</td>
+          <td style="border: 1px solid #94a3b8; padding: 6px 8px; text-align: center; vertical-align: middle; mso-number-format:'\\@';">${escapeHTML(item.nim)}</td>
+          <td style="border: 1px solid #94a3b8; padding: 6px 8px; vertical-align: middle;">${escapeHTML(item.fakultas)}</td>
+          <td style="border: 1px solid #94a3b8; padding: 6px 8px; vertical-align: middle;">${escapeHTML(item.prodi)}</td>
+          <td style="border: 1px solid #94a3b8; padding: 6px 8px; vertical-align: middle;">${escapeHTML(item.tujuan)}</td>
+        </tr>
+      `;
+    });
+
+    const excelHTML = `
+      <html xmlns:o="urn:schemas-microsoft-com:office:office"
+            xmlns:x="urn:schemas-microsoft-com:office:excel"
+            xmlns="http://www.w3.org/TR/REC-html40">
+      <head>
+        <meta charset="UTF-8" />
+        <style>
+          body, table { font-family: Arial, sans-serif; font-size: 11pt; }
+          th {
+            background-color: #1e3a8a;
+            color: #ffffff;
+            font-weight: bold;
+            border: 1px solid #0f172a;
+            padding: 8px 10px;
+            text-align: center;
+          }
+        </style>
+      </head>
+      <body>
+        <table>
+          <tr>
+            <td colspan="8" style="font-size: 14pt; font-weight: bold; text-align: center; color: #1e3a8a;">
+              LAPORAN REKAP KUNJUNGAN PERPUSTAKAAN UNIVERSITAS NUSA NIPA
+            </td>
+          </tr>
+          <tr>
+            <td colspan="8" style="font-size: 10pt; text-align: center; color: #334155;">
+              Filter Laporan: ${escapeHTML(filterInfo)} &nbsp;|&nbsp; Total Pengunjung: ${dataTersaring.length} Orang &nbsp;|&nbsp; Dicetak: ${escapeHTML(tanggalCetak)}
+            </td>
+          </tr>
+          <tr><td colspan="8"></td></tr>
+          <thead>
+            <tr>
+              <th style="width: 45px;">No</th>
+              <th style="width: 135px;">Waktu Kunjungan</th>
+              <th style="width: 230px;">Nama Lengkap</th>
+              <th style="width: 170px;">Kategori Pengunjung</th>
+              <th style="width: 130px;">NIM / NIDN</th>
+              <th style="width: 220px;">Fakultas</th>
+              <th style="width: 210px;">Program Studi</th>
+              <th style="width: 230px;">Tujuan Kunjungan</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${barisTabelHTML}
+          </tbody>
+        </table>
+      </body>
+      </html>
+    `;
+
+    const bagianNamaFile = ["Laporan_Kunjungan_UNIPA"];
+    if (prodiFilter.value) {
+      bagianNamaFile.push(prodiFilter.value.replace(/\s+/g, '_'));
+    }
+    const mode = periodeMode.value;
+    if (mode === 'tanggal' && dateFilter.value) {
+      bagianNamaFile.push(`Tgl_${dateFilter.value}`);
+    } else if (mode === 'bulan' && monthFilter.value) {
+      bagianNamaFile.push(`Bulan_${monthFilter.value}`);
+    } else if (mode === 'tahun' && yearFilter.value) {
+      bagianNamaFile.push(`Tahun_${yearFilter.value}`);
+    } else {
+      bagianNamaFile.push(new Date().toISOString().slice(0, 10));
+    }
+
+    const blob = new Blob(['\ufeff' + excelHTML], { type: 'application/vnd.ms-excel;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `${bagianNamaFile.join('_')}.xls`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }
+</script>
+
+</body>
+</html>
